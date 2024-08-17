@@ -1,0 +1,217 @@
+{
+  "fruites": [
+    {
+      "id": "1",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-2.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Apricots",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-4.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Banana",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-3.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-1.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-2.jpg"
+    },
+    {
+      "id": "8",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "9",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    }
+  ],
+  "product": [
+    {
+      "id": "1",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-2.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Apricots",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-4.jpg"
+    },
+    {
+      "id": "5",
+      "name": "orange",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-3.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-1.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Raspberries",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-2.jpg"
+    },
+    {
+      "id": "8",
+      "name": "Grapes",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "9",
+      "name": "Oranges",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+      "price": 4.99,
+      "image": "img/fruite-item-5.jpg"
+    },
+    {
+      "id": "6074",
+      "name": "meet",
+      "description": "axv",
+      "price": "270"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "7e2a",
+      "name": "Dobariya ",
+      "email": "meetdobariya480@gmail.com",
+      "review": "Good product"
+    },
+    {
+      "id": "381f",
+      "name": "Vraj Dhaduk",
+      "email": "vraj21@gamail.com",
+      "review": "Best Product"
+    },
+    {
+      "id": "4c2c",
+      "name": "Dobariya Meet  ",
+      "email": "meetdobariya480@gmail.com",
+      "review": "ggggg"
+    },
+    {
+      "id": "81bb",
+      "name": "Dobariya",
+      "email": "vraj21@gamail.com",
+      "review": "fdxgfhj"
+    },
+    {
+      "id": "af02",
+      "name": "Dobariya Meet",
+      "email": "meetdobariya480@gmail.com",
+      "review": "best product"
+    },
+    {
+      "id": "8fcb",
+      "name": "Dobariya Meet",
+      "email": "vraj21@gamail.com",
+      "review": "gvhj"
+    },
+    {
+      "id": "b33e",
+      "name": "Dobariya Meet",
+      "email": "vraj21@gamail.com",
+      "review": "best"
+    }
+  ],
+  "coupon": [
+    {
+      "id": "836a",
+      "coupon_name": "arp123",
+      "percentage": "12",
+      "expiry_Date": "2024-04-26"
+    },
+    {
+      "id": "be80",
+      "coupon_name": "xyz789",
+      "percentage": "5",
+      "expiry_Date": "2024-04-12"
+    },
+    {
+      "id": "aec9",
+      "coupon_name": "zzzcv89",
+      "percentage": "18",
+      "expiry_Date": "2024-05-25"
+    },
+    {
+      "id": "e764",
+      "coupon_name": "xyz777",
+      "percentage": "10",
+      "expiry_Date": "2024-05-09"
+    }
+  ],
+  "contact": [
+    {
+      "id": "2d73",
+      "adress": "acvben",
+      "email": "meetdobariya480@gmail.com",
+      "phone": "45678900654"
+    }
+  ],
+  "checkout": []
+}
