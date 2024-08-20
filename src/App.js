@@ -26,9 +26,9 @@ function App() {
         <Alerts/>
         <Routes>
           <Route exact path="/*" element={<UserRoute />} />
-          <Route element={<PrivateRoute />}>
+          {/* <Route element={<PrivateRoute />}> */}
             <Route exact path="/admine/*" element={<AdmineRoute />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </PersistGate>
     </Provider>
