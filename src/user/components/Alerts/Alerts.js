@@ -20,13 +20,13 @@ function Alerts(props) {
             })
         }
 
-        const timeRef = setTimeout(() => {
-            dispatch(resetAlert())
-        }, 2000)
+        // const timeRef = setTimeout(() => {
+        //     dispatch(resetAlert())
+        // }, 2000)
 
-        return () => {
-            clearTimeout(timeRef)
-        }
+        // return () => {
+        //     clearTimeout(timeRef)
+        // }
 
     }, [messsage])
 
