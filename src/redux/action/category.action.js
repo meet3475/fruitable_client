@@ -4,9 +4,7 @@ import axiosInstance from "../../utils/axiosInstance";
 export const getData = () => async (dispatch) => {
     try {
         const response = await axiosInstance.get("categories/list-categories");
-        const data = await response.json();
-        // console.log(data);
-        dispatch({type: GET_CATEGORY, payload: data.data});
+        dispatch({type: GET_CATEGORY, payload: response.data.data});
 
     } catch (error) {
         console.log(error);
