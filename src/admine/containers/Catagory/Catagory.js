@@ -205,8 +205,6 @@ export default function Catagory() {
 
     ];
 
-
-
     return (
         <>
             <React.Fragment>

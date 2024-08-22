@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 const initialState = {
     isLoading: false,
@@ -11,7 +12,7 @@ export const getSubData = createAsyncThunk(
     'subcategories/get',
     async () => {
         try {
-            const response = await axios.get("http://localhost:8000/api/v1/subcategories/list-subcategories")
+            const response = await axiosInstance.get("subcategories/list-subcategories")
             return  response.data;
         } catch (error) {
             console.log(error.message);
@@ -23,7 +24,7 @@ export const handleAdd = createAsyncThunk(
     'subcategories/add',
     async (data) => {
        try {
-            const response = await axios.post("http://localhost:8000/api/v1/subcategories/add-subcategories", data)
+            const response = await axiosInstance.post("subcategories/add-subcategories", data)
             return response.data
        } catch (error) {
             console.log(error.message);
@@ -35,7 +36,7 @@ export const handledelete = createAsyncThunk(
     'subcategories/delete',
     async (id) => {
         try {
-            await axios.delete("http://localhost:8000/api/v1/subcategories/delete-subcategory/" + id)
+            await axiosInstance.delete("subcategories/delete-subcategory/" + id)
             return id;
         } catch (error) {
             console.log(error.message);
@@ -47,7 +48,7 @@ export const handleUpdateData = createAsyncThunk(
     'subcategories/update',
     async (data) => {
         try {
-            const response =  await axios.put("http://localhost:8000/api/v1/subcategories/update-subcategory/" + data._id, data)
+            const response =  await axiosInstance.put("subcategories/update-subcategory/" + data._id, data)
             return response.data
         } catch (error) {
             console.log(error.message);
