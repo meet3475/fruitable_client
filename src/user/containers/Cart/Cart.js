@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProduct } from '../../../redux/action/product.action';
-import { deleteToCart, minusToCart, plusToCart } from '../../../redux/slice/cart.slice';
+import { deleteCartItem, deleteToCart, minusToCart, plusToCart, updateCartQuantity } from '../../../redux/slice/cart.slice';
 
 import { useFormik } from 'formik';
 
@@ -15,14 +15,14 @@ function Cart(props) {
 
     const [couponDisCount, setCouponDisCount] = useState(0);
 
-    const cart = useSelector(state => state.cart)
+    const cart = useSelector(state => state.cart || []);
+    console.log('Cart State:', cart);
 
-    const product = useSelector(state => state.product)
-
+    const product = useSelector(state => state.product);
+    console.log(product);
+    
     const coupon = useSelector(state => state.coupon);
     console.log(coupon);
-
-    console.log(cart, product);
 
     const dispatch = useDispatch()
 
@@ -31,27 +31,41 @@ function Cart(props) {
         dispatch(getCoupon())
     }, [])
 
-    const cartData = cart.cart.map((v) => {
-        console.log(v.Pid);
+    const items = cart?.cart?.data?.items || [];
+    console.log(items);
 
-        const productData = product.product.find((v1) => v1.id === v.Pid)
+    const cartData = items.map((v) => {
+        console.log(v.product_id);
+
+        const productData = product.product.find((v1) => v1._id === v.product_id);
         console.log(productData);
 
-        return { ...productData, qty: v.qty }
-    })
+        return { ...productData, qty: v.qty, cart_id: cart.cart.data._id }
+
+    });
 
     console.log(cartData);
 
-    const handlePlus = (id) => {
-        dispatch(plusToCart(id))
+    const handlePlus = (_id) => {
+        console.log(_id);
+        const item = cartData.find(v => v._id === _id);
+        if (item) {
+            dispatch(updateCartQuantity({ cart_id: item.cart_id, product_id: _id, qty: item.qty + 1 }));
+        }
     }
 
-    const handleminus = (id) => {
-        dispatch(minusToCart(id))
+    const handleminus = (_id) => {
+        console.log(_id);
+        const item = cartData.find(v => v._id === _id);
+        if (item && item.qty > 1) {
+            dispatch(updateCartQuantity({ cart_id: item.cart_id, product_id: _id, qty: item.qty - 1 }));
+        }
     }
 
-    const handleDelete = (id) => {
-        dispatch(deleteToCart(id))
+    const handleDelete = ( cart_id, _id) => {
+        console.log("Handling delete for ID:", _id);
+        console.log(cart_id);
+        dispatch(deleteCartItem({ cart_id, _id }))
     }
 
     const totalAmt = cartData.reduce((acc, v) => acc + v.qty * v.price, 0);
@@ -175,7 +189,7 @@ function Cart(props) {
                                         <tr>
                                             <th scope="row">
                                                 <div className="d-flex align-items-center">
-                                                    <img src={v.image} className="img-fluid me-5 rounded-circle" style={{ width: 80, height: 80 }} alt />
+                                                    <img src={v.product_img.url} className="img-fluid me-5 rounded-circle" style={{ width: 80, height: 80 }} alt />
                                                 </div>
                                             </th>
                                             <td>
@@ -187,13 +201,13 @@ function Cart(props) {
                                             <td>
                                                 <div className="input-group quantity mt-4" style={{ width: 100 }}>
                                                     <div className="input-group-btn">
-                                                        <button onClick={() => handleminus(v.id)} disabled={v.qty > 1 ? false : true} className="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                        <button onClick={() => handleminus(v._id)} disabled={v.qty > 1 ? false : true} className="btn btn-sm btn-minus rounded-circle bg-light border">
                                                             <i className="fa fa-minus" />
                                                         </button>
                                                     </div>
                                                     <span className="form-control form-control-sm text-center border-0">{v.qty}</span>
                                                     <div className="input-group-btn">
-                                                        <button onClick={() => handlePlus(v.id)} className="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                        <button onClick={() => handlePlus(v._id)} className="btn btn-sm btn-plus rounded-circle bg-light border">
                                                             <i className="fa fa-plus" />
                                                         </button>
                                                     </div>
@@ -203,7 +217,7 @@ function Cart(props) {
                                                 <p className="mb-0 mt-4">{(v.price * v.qty).toFixed(2)}$</p>
                                             </td>
                                             <td>
-                                                <button onClick={() => handleDelete(v.id)} className="btn btn-md rounded-circle bg-light border mt-4">
+                                                <button onClick={() => handleDelete(v.cart_id, v._id)} className="btn btn-md rounded-circle bg-light border mt-4">
                                                     <i className="fa fa-times text-danger" />
                                                 </button>
                                             </td>
@@ -226,7 +240,7 @@ function Cart(props) {
                             />
                             {errors.coupon && touched.coupon ? <span style={{ color: "red", margin: "20px" }} >{errors.coupon}</span> : null}
                             <Button
-                                btnDisable={true}
+                                // btnDisable={true}
                                 className="btn border-secondary rounded-pill px-4 py-3 text-primary"
                                 type="submit">
                                 Apply Coupon

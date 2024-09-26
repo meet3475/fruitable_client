@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import OwlCarousel from 'react-owl-carousel';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addShopDetail, deleteShopDetail, editShopDetail, getShopDetail } from '../../../redux/action/shopDetail.action';
-import { Axios } from 'axios';
-import axios from "axios"
-import { baseURL } from '../../../utils/baseURL';
-
 import { object, string, number, date, InferType } from 'yup';
-
 import { useFormik } from 'formik';
-
 import { DataGrid } from '@mui/x-data-grid';
-
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
 import { addToCart, minusToCart, plusToCart } from '../../../redux/slice/cart.slice';
+import { getProduct } from '../../../redux/action/product.action';
 
 
 function ShopDetail(props) {
@@ -25,31 +21,54 @@ function ShopDetail(props) {
   console.log(id);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [fruits, setFruits] = useState([])
-
   const [update, setUpdate] = useState(false)
-
   const [count, setCount] = useState(1)
 
-  const reviews = useSelector(state => state.reviews)
+  const [productDetail, setProductDetail] = useState('');
 
+
+  const reviews = useSelector(state => state.reviews)
   const fruites = useSelector(state => state.fruites)
 
   const cart = useSelector(state => state.cart)
   console.log(cart);
 
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
+
+
   const handleAddToCart = () => {
-    dispatch(addToCart({id, count}))
+    console.log(count);
+    if (auth.isAuthentication) {
+      if (productDetail._id) {
+        dispatch(addToCart({
+          "user_id": "Meet",
+          "items": [
+            {
+              "product_id": productDetail._id,
+              "qty": count
+            }
+          ]
+        }))
+      }
+    } else {
+      navigate("/authForm")
+    }
+    
   }
 
+  
+
   const handlePlus = () => {
-    setCount(prev  => prev + 1)
+    setCount(count + 1)
   }
 
   const handleminus = () => {
     if (count > 1) {
-      setCount(prev  => prev - 1)
+      setCount(count - 1)
     }
   }
 
@@ -87,15 +106,6 @@ function ShopDetail(props) {
 
     try {
 
-      // const response = await fetch("http://localhost:8000/fruites");
-      // const data = await response.json()
-
-      // // const data =  axios.get(baseURL + "fruites")
-
-      // const ans = data.find((v) => v.id === id)
-      // console.log(ans);
-      // setFruits(ans)
-
       const data = fruites.fruites.find((v) => v.id === id)
       setFruits(data);
 
@@ -113,10 +123,18 @@ function ShopDetail(props) {
     setUpdate(true);
   }
 
+  const ProductDetails = useSelector(state => state.product);
+  console.log("product data", ProductDetails);
+
+  const productData = ProductDetails.product.find((v) => v._id === id);
+  console.log("productData", productData);
+
   React.useEffect(() => {
+    setProductDetail(productData)
     getData()
     dispatch(getShopDetail())
-  }, [])
+    dispatch(getProduct());
+  }, [dispatch])
 
   const columns = [
     { field: 'name', headerName: 'Name', width: 170 },
@@ -141,6 +159,37 @@ function ShopDetail(props) {
 
   ];
 
+  let vegetable_carousel = {
+    autoplay: true,
+    smartSpeed: 1500,
+    center: false,
+    dots: true,
+    loop: true,
+    margin: 25,
+    nav: true,
+    navText: [
+      '<div class="owl-prev"><i class="bi bi-arrow-left"></i></div>',
+      '<div class="owl-next"><i class="bi bi-arrow-right"></i></div>'
+    ],
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1
+      },
+      576: {
+        items: 1
+      },
+      768: {
+        items: 2
+      },
+      992: {
+        items: 3
+      },
+      1200: {
+        items: 4
+      }
+    }
+  }
 
 
   return (
@@ -164,14 +213,20 @@ function ShopDetail(props) {
                 <div className="col-lg-6">
                   <div className="border rounded">
                     <a href="#">
-                      <img src={`../${fruits.image}`} className="img-fluid rounded" alt="Image" />
+                      {
+                        productDetail.product_img ? (
+                          <img src={productDetail.product_img.url} className="img-fluid rounded" alt="Image" />
+                        ) : (
+                          <p>Loading...</p>
+                        )
+                      }
                     </a>
                   </div>
                 </div>
                 <div className="col-lg-6">
-                  <h4 className="fw-bold mb-3">{fruits.name}</h4>
-                  <p className="mb-3">Category: Vegetables</p>
-                  <h4 className="fw-bold mb-3">${fruits.price}</h4>
+                  <h4 className="fw-bold mb-3">{productDetail.name}</h4>
+                  <p className="mb-3">{productDetail.discription}</p>
+                  <h4 className="fw-bold mb-3">${productDetail.price}</h4>
                   <div className="d-flex mb-4">
                     <i className="fa fa-star text-secondary" />
                     <i className="fa fa-star text-secondary" />
@@ -183,13 +238,13 @@ function ShopDetail(props) {
                   <p className="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish</p>
                   <div className="input-group quantity mb-5" style={{ width: 100 }}>
                     <div className="input-group-btn">
-                      <button onClick={() => handleminus()} className="btn btn-sm btn-minus rounded-circle bg-light border">
+                      <button onClick={handleminus} className="btn btn-sm btn-minus rounded-circle bg-light border">
                         <i className="fa fa-minus" />
                       </button>
                     </div>
                     <span className="form-control form-control-sm text-center border-0" >{count}</span>
                     <div className="input-group-btn">
-                      <button onClick={() => handlePlus()} className="btn btn-sm btn-plus rounded-circle bg-light border">
+                      <button onClick={handlePlus} className="btn btn-sm btn-plus rounded-circle bg-light border">
                         <i className="fa fa-plus" />
                       </button>
                     </div>
@@ -556,10 +611,10 @@ function ShopDetail(props) {
           </div>
           <h1 className="fw-bold mb-0">Related products</h1>
           <div className="vesitable">
-            <div className="owl-carousel vegetable-carousel justify-content-center">
+            <OwlCarousel {...vegetable_carousel} className="owl-carousel vegetable-carousel justify-content-center">
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-6.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-6.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -573,7 +628,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-1.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-1.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -587,7 +642,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-3.png" className="img-fluid w-100 rounded-top bg-light" alt />
+                  <img src="../img/vegetable-item-3.png" className="img-fluid w-100 rounded-top bg-light" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -601,7 +656,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-4.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-4.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -615,7 +670,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-5.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-5.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -629,7 +684,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-6.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-6.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -643,7 +698,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-5.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-5.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -657,7 +712,7 @@ function ShopDetail(props) {
               </div>
               <div className="border border-primary rounded position-relative vesitable-item">
                 <div className="vesitable-img">
-                  <img src="img/vegetable-item-6.jpg" className="img-fluid w-100 rounded-top" alt />
+                  <img src="../img/vegetable-item-6.jpg" className="img-fluid w-100 rounded-top" alt />
                 </div>
                 <div className="text-white bg-primary px-3 py-1 rounded position-absolute" style={{ top: 10, right: 10 }}>Vegetable</div>
                 <div className="p-4 pb-0 rounded-bottom">
@@ -669,7 +724,7 @@ function ShopDetail(props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </OwlCarousel>
           </div>
         </div>
       </div>

@@ -1,4 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit"
+
+import { createAsyncThunk, createSlice} from "@reduxjs/toolkit"
+import axios from "axios";
 
 const initialState = {
     isLoading: false,
@@ -6,51 +8,69 @@ const initialState = {
     error: null
 }
 
+export const addToCart = createAsyncThunk(
+    'cart/addToCart',
+    async (data, { rejectedWithValue }) => {
+        try {
+            console.log(data);
+
+            const response = await axios.post('http://localhost:8000/api/v1/carts/add-to-cart', data);
+            console.log(response);
+
+            return response.data
+        } catch (error) {
+            return rejectedWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
+
+export const deleteCartItem = createAsyncThunk(
+    'carts/deleteCartItem',
+    async ({ cart_id, _id }, { rejectWithValue }) => {
+        try {
+            console.log(cart_id, _id);
+            const url = `http://localhost:8000/api/v1/carts/delete-cart/${cart_id}/${_id}`;
+            const response = await axios.delete(url);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
+
+
+export const updateCartQuantity = createAsyncThunk(
+    'carts/updateCartQuantity',
+    async ({ cart_id, product_id, qty }, { rejectWithValue }) => {
+        try {
+            const url = `http://localhost:8000/api/v1/carts/update-quantity/${cart_id}`;
+            const response = await axios.put(url, { product_id, qty });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
+
+
 const cartSlice = createSlice({
     name: 'cart',
     initialState,
-    reducers: {
-        addToCart: (state, action) => {
-            const index = state.cart.findIndex((v) => v.Pid === action.payload.id);
-            // console.log(index);
-
-            if (index !== -1) {
-                state.cart[index].qty += action.payload.count
-            } else {
-                state.cart.push({ Pid: action.payload.id, qty: action.payload.count});
-            }
-
-            // console.log(action);
-
-        },
-        plusToCart: (state, action) => {
-            // console.log(action.payload);
-
-            const index = state.cart.findIndex((v) => v.Pid === action.payload);
-
-            state.cart[index].qty++
-        },
-        minusToCart: (state, action) => {
-
-            // console.log(action.payload);
-
-            const index = state.cart.findIndex((v) => v.Pid === action.payload);
-            
-            state.cart[index].qty--
-
-        },
-        deleteToCart: (state, action) => {
-
-            // console.log(action.payload);
-
-            state.cart = state.cart.filter((v) => v.Pid !== action.payload);
-            
-    
-        }
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(addToCart.fulfilled, (state, action) => {
+                state.cart = action.payload
+            })
+            .addCase(deleteCartItem.fulfilled, (state, action) => {
+                state.cart = action.payload
+            })
+            .addCase(updateCartQuantity.fulfilled, (state, action) => {
+                state.cart = action.payload;
+            });
 
     }
-})
 
-export const { addToCart, plusToCart, minusToCart, deleteToCart } = cartSlice.actions;
+});
 
-export default cartSlice.reducer
+export default cartSlice.reducer;

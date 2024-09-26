@@ -1,48 +1,65 @@
 import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getShop } from '../../../redux/action/shop.action';
-import { addToCart } from '../../../redux/slice/cart.slice';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { getProduct } from '../../../redux/action/product.action';
+import { addToCart } from '../../../redux/slice/cart.slice';
 
 function Shop(props) {
 
-
-  // const getdata = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:8000/fruites");
-  //     const data = await response.json();
-  //     setFruitData(data);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
-
-
-  // useEffect(() => {
-  //   getdata()
-  // }, [])
+  const { id } = useParams()
+  console.log(id);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const location = useLocation();
   const { subcategory_id } = location.state || {};
+
+  const [count, setCount] = useState(1)
 
   const fruites = useSelector(state => state.fruites)
 
   const product = useSelector(state => state.product);
   console.log(product);
 
-  const handleAddToCart = (id) => {
-    dispatch(addToCart({id, count:1}))
-  }
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
 
   React.useEffect(() => {
+
+    const data = product.product.find((v) => v._id === id);
+    console.log(data);
+
     dispatch(getShop())
     dispatch(getProduct());
   }, [])
+
+
+  const handleAddToCart = (event, _id) => {
+    event.preventDefault();
+    console.log("cart qty:",_id);
+    
+    if (auth.isAuthentication) {
+      dispatch(addToCart({
+          "user_id": "Meet",
+          "items": [
+            {
+              "product_id": _id,
+              "qty": count
+            }
+          ]
+      }))
+    } else {
+      navigate("/authForm")
+    }
+
+
+    
+  }
+
 
   const theme = useContext(ThemeContext);
 
@@ -50,7 +67,8 @@ function Shop(props) {
     ? product.product.filter((v) => v.subcategory_id === subcategory_id)
     : product.product;
 
-
+  console.log(filteredProducts);
+  
 
   return (
     <div>
@@ -288,29 +306,34 @@ function Shop(props) {
                     {
                       filteredProducts.map((v) => (
                         <div className="rounded position-relative fruite-item productData">
-                              <div className="fruite-img">
-                                <img src={v.product_img.url} className="img-fluid  rounded-top pro_Img" alt />
+                          <NavLink to={`/ShopDetail/${v._id}`} >
+                            <div className="fruite-img">
+                              <img src={v.product_img.url} className="img-fluid  rounded-top pro_Img" alt />
+                            </div>
+
+                            <div className="p-4">
+                              <h4>{v.name}</h4>
+                              <p>{v.discription}</p>
+                              <p>{v.stock} / Pcs.</p>
+                              <div className="d-flex justify-content-between flex-lg-wrap">
+                                <p className="text-dark fs-5 fw-bold mb-0">${v.price} / kg</p>
+                                <Link
+                                  onClick={(event) => handleAddToCart(event, v._id)}   
+                                  className="btn border border-secondary rounded-pill px-3 text-primary"
+                                >
+                                  <i className="fa fa-shopping-bag me-2 text-primary" />
+                                  Add to cart
+                                </Link>
                               </div>
 
-                              <div className="p-4">
-                                <h4>{v.name}</h4>
-                                <p>{v.discription}</p>
-                                <p>{v.stock} / Pcs.</p>
-                                <div className="d-flex justify-content-between flex-lg-wrap">
-                                  <p className="text-dark fs-5 fw-bold mb-0">${v.price} / kg</p>
-                                  <Link
-                                    onClick={() => handleAddToCart(v.id)} 
-                                    className="btn border border-secondary rounded-pill px-3 text-primary"
-                                  >
-                                    <i className="fa fa-shopping-bag me-2 text-primary" />
-                                    Add to cart
-                                  </Link>
-                                </div>
-                               
-                              </div>
                             </div>
+                          </NavLink>
+                        </div>
                       ))
+
+
                     }
+
                     <div className="col-12">
                       <div className="pagination d-flex justify-content-center mt-5">
                         <a href="#" className="rounded">«</a>

@@ -38,17 +38,16 @@ function UserRoute(props) {
                 <Header />
                 <Routes>
                     <Route exact path="/" element={<Home />} />
-
+                    <Route exact path="/Shop" element={<Shop />} />
+                    <Route exact path="/ShopDetail/:id" element={<ShopDetail />} />
                     <Route element={<PrivateRoute />}>
-                        <Route exact path="/Shop" element={<Shop />} />
-                        <Route exact path="/ShopDetail/:id" element={<ShopDetail />} />
-                        
+                    <Route exact path="/Cart" element={<Cart />} />
                     </Route>
 
 
                     {/* <Route exact path="/Shop_Detail" element={<Shop_Detail />} /> */}
 
-                    <Route exact path="/Cart" element={<Cart />} />
+                   
                     <Route exact path="/authForm" element={<AuthForm />} />
                     <Route exact path="/chat" element={<Chat />} />
                     <Route exact path="/Chackout" element={<Chackout />} />

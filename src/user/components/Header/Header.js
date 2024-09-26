@@ -12,8 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { logout } from '../../../redux/slice/auth.slice';
 
 function Header(props) {
-  const cart = useSelector(state => state.cart);
-  // console.log(cart);
+ 
 
   const dispatch = useDispatch();
   const [subcat, setSubcat] = useState([]);
@@ -22,10 +21,18 @@ function Header(props) {
   const subcategories = useSelector((state) => state.subcategories.subcategories);
   const product = useSelector((state) => state.product.product);
 
+  const cart = useSelector(state => state.cart || []);
+  console.log('Cart State:', cart);
+
+  const items = cart?.cart?.data?.items || [];
+  console.log(items);
+
+  const totalQty = items.reduce((sum, item) => sum + (item.qty || 0), 0);
+  console.log('Total Quantity:', totalQty);
+
 
   const { isAuthentication, user } = useSelector((state) => state.auth);
 
-  const totalQtyData = cart.cart.reduce((acc, v) => acc + v.qty, 0);
 
   const themeContext = useContext(ThemeContext);
   // console.log(themeContext);
@@ -128,7 +135,7 @@ function Header(props) {
                     className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                     style={{ top: '-5px', left: 15, height: 20, minWidth: 20 }}
                   >
-                    {totalQtyData}
+                    {totalQty}
                   </span>
                 </NavLink>
 

@@ -5,7 +5,7 @@ import { productReducer } from "./product.reducer";
 import { fruitesReducer } from "./shop.reducer";
 import { reviewReducer } from "./review.reducer";
 import counterSlice from "../slice/counter.slice";
-import cartSlice from "../slice/cart.slice";
+
 import couponSlice from "../slice/coupon.slice";
 import { categoriesReducer } from "./catagory.reducer";
 import subcategorySlice from "../slice/subcategory.slice";
@@ -13,6 +13,7 @@ import { variantReducer } from "./variant.reducer";
 import { salespeopleReducer } from "./salespeople.reducer";
 import authSlice from "../slice/auth.slice";
 import alertsSlice from "../slice/alerts.slice";
+import cartSlice from "../slice/cart.slice";
 
 
 
