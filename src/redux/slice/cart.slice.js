@@ -1,6 +1,7 @@
 
 import { createAsyncThunk, createSlice} from "@reduxjs/toolkit"
 import axios from "axios";
+import { authURL } from "../../utils/baseURL";
 
 const initialState = {
     isLoading: false,
@@ -14,7 +15,7 @@ export const addToCart = createAsyncThunk(
         try {
             console.log(data);
 
-            const response = await axios.post('http://localhost:8000/api/v1/carts/add-to-cart', data);
+            const response = await axios.post(authURL + 'carts/add-to-cart', data);
             console.log(response);
 
             return response.data
@@ -29,7 +30,7 @@ export const deleteCartItem = createAsyncThunk(
     async ({ cart_id, _id }, { rejectWithValue }) => {
         try {
             console.log(cart_id, _id);
-            const url = `http://localhost:8000/api/v1/carts/delete-cart/${cart_id}/${_id}`;
+            const url = authURL + `carts/delete-cart/${cart_id}/${_id}`;
             const response = await axios.delete(url);
             return response.data;
         } catch (error) {
@@ -43,7 +44,7 @@ export const updateCartQuantity = createAsyncThunk(
     'carts/updateCartQuantity',
     async ({ cart_id, product_id, qty }, { rejectWithValue }) => {
         try {
-            const url = `http://localhost:8000/api/v1/carts/update-quantity/${cart_id}`;
+            const url = authURL + `carts/update-quantity/${cart_id}`;
             const response = await axios.put(url, { product_id, qty });
             return response.data;
         } catch (error) {
